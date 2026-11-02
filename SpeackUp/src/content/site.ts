@@ -31,9 +31,10 @@ export const siteConfig = {
   ] satisfies NavItem[],
   links: {
     join: null as string | null,
-    instagram: null as string | null,
-    linkedIn: null as string | null,
-    email: null as string | null,
+    instagram: "https://www.instagram.com/speakup_auebgenz/" as string | null,
+    linkedIn:
+      "https://www.linkedin.com/company/speakup-aueb-genz/home/" as string | null,
+    email: "mailto:speakupaueb@gmail.com" as string | null,
     privacy: null as string | null,
   },
 } as const;

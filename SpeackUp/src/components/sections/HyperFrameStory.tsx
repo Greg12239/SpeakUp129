@@ -297,6 +297,7 @@ export function HyperFrameStory({
   const reducedMotion = useReducedMotion();
   const largeLayout = useLargeEditorialLayout();
   const [completed, setCompleted] = useState(false);
+  const completionGeometry = useRef<{ canvasTop: number; scrollY: number } | null>(null);
   const { scrollYProgress: rawProgress } = useScroll({
     target: sectionRef,
     offset: largeLayout ? ["start start", "end end"] : ["start start", "end 0.3"],
@@ -310,8 +311,43 @@ export function HyperFrameStory({
   const desktopEnhanced = hydrated && !reducedMotion && largeLayout;
   const cascadeEnhanced = hydrated && !reducedMotion && !largeLayout;
   const enhanced = desktopEnhanced || cascadeEnhanced;
-  const completeStory = useCallback(() => setCompleted(true), []);
+  const completeStory = useCallback(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas || completionGeometry.current) {
+      return;
+    }
+
+    completionGeometry.current = {
+      canvasTop: canvas.getBoundingClientRect().top,
+      scrollY: window.scrollY,
+    };
+    setCompleted(true);
+  }, []);
   const stages = useStoryStageController(rawProgress, enhanced, completeStory);
+
+  useLayoutEffect(() => {
+    const previousGeometry = completionGeometry.current;
+
+    if (!completed || !previousGeometry || !desktopEnhanced) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const nextCanvasTop = canvas.getBoundingClientRect().top;
+    const scrollDelta = nextCanvasTop - previousGeometry.canvasTop;
+
+    if (Math.abs(scrollDelta) > 0.5) {
+      window.scrollTo(0, previousGeometry.scrollY + scrollDelta);
+    }
+
+    completionGeometry.current = null;
+  }, [completed, desktopEnhanced]);
 
   useLayoutEffect(() => {
     const leadStage = stages[0]!;
