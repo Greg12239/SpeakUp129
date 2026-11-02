@@ -8,6 +8,7 @@ import { BlueprintLayer } from "@/components/sections/BlueprintLayer";
 import { HeroImageReveal } from "@/components/sections/HeroImageReveal";
 import { Button } from "@/components/ui/Button";
 import { ScrollCue } from "@/components/ui/ScrollCue";
+import { joinFormUrl } from "@/content/site";
 
 type HeroProps = {
   transitionProgress: MotionValue<number>;
@@ -185,7 +186,7 @@ export function Hero({ transitionProgress }: HeroProps) {
               communication and leadership.
             </p>
             <Button
-              href="https://docs.google.com/forms/d/e/1FAIpQLSciJw_Jio_KMje5xPZA6yi3SQrm07IZZzhyaS4L0sU8BrDlSg/viewform"
+              href={joinFormUrl}
               rel="noopener noreferrer"
               target="_blank"
               variant="paper"

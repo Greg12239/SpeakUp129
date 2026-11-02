@@ -1716,6 +1716,13 @@ img {
   --social-duration: 4.9s;
 }
 
+.footer-social-cta--tiktok {
+  /* TikTok's supplied canvas has ~6% more transparent inset than Instagram/LinkedIn. */
+  --social-canvas-size: clamp(5.15rem, 8.5vw, 7.7rem);
+  --social-delay: -4.15s;
+  --social-duration: 5.2s;
+}
+
 .footer-social-cta--email {
   --social-canvas-size: clamp(5.35rem, 8.65vw, 7.8rem);
   --social-delay: -0.7s;

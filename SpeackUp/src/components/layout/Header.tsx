@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AdaptiveWordmark } from "@/components/brand/AdaptiveWordmark";
 import { Button } from "@/components/ui/Button";
-import { siteConfig } from "@/content/site";
+import { joinFormUrl, siteConfig } from "@/content/site";
 
 type NavTheme = "paper" | "ink" | "media";
 
@@ -136,7 +136,12 @@ export function Header() {
               {item.label}
             </a>
           ))}
-          <Button href="#join" variant="nav">
+          <Button
+            href={joinFormUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="nav"
+          >
             Join Us
           </Button>
         </div>
@@ -170,7 +175,13 @@ export function Header() {
               {item.label}
             </a>
           ))}
-          <a href="#join" onClick={closeMenu} tabIndex={menuOpen ? 0 : -1}>
+          <a
+            href={joinFormUrl}
+            onClick={closeMenu}
+            rel="noopener noreferrer"
+            tabIndex={menuOpen ? 0 : -1}
+            target="_blank"
+          >
             <span aria-hidden="true">04</span>
             Join Us
           </a>

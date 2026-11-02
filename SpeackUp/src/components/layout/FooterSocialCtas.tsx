@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { siteConfig } from "@/content/site";
 import { publicAsset } from "@/lib/public-asset";
 
-type SocialNetwork = "Instagram" | "LinkedIn" | "Email";
+type SocialNetwork = "Instagram" | "LinkedIn" | "TikTok" | "Email";
 type CardState = "closed" | "preview" | "pinned";
 type CopyStatus = "copied" | "failed" | null;
 type PopoverPosition = { top: number; left: number; pointerLeft: number } | null;
@@ -15,6 +15,7 @@ type PopoverPosition = { top: number; left: number; pointerLeft: number } | null
 const socialCtaAssets = {
   Instagram: { src: publicAsset("/social/SpeakUp_Instagram_CTA.png"), width: 1024, height: 1024 },
   LinkedIn: { src: publicAsset("/social/SpeakUp_LinkedIn_CTA.png"), width: 1024, height: 1024 },
+  TikTok: { src: publicAsset("/social/SpeakUp_TikTok_CTA.png"), width: 1254, height: 1254 },
   Email: { src: publicAsset("/social/SpeakUp_Email_CTA.png"), width: 1254, height: 1254 },
 } as const;
 
@@ -184,6 +185,7 @@ export function FooterSocialCtas() {
     <div className="footer-social-cta-group" aria-label="SpeakUp social links" ref={groupRef}>
       <a aria-label="Instagram" className="footer-social-cta footer-social-cta--instagram" href={siteConfig.links.instagram ?? undefined} rel="noopener noreferrer" target="_blank"><SocialCtaArtwork network="Instagram" /></a>
       <a aria-label="LinkedIn" className="footer-social-cta footer-social-cta--linkedin" href={siteConfig.links.linkedIn ?? undefined} rel="noopener noreferrer" target="_blank"><SocialCtaArtwork network="LinkedIn" /></a>
+      <a aria-label="TikTok" className="footer-social-cta footer-social-cta--tiktok" href={siteConfig.links.tikTok ?? undefined} rel="noopener noreferrer" target="_blank"><SocialCtaArtwork network="TikTok" /></a>
       <button aria-controls={popoverId} aria-expanded={isCardOpen} aria-label="Email SpeakUp" className="footer-social-cta footer-social-cta--email" data-card-active={isCardOpen} onClick={() => { clearTimers(); if (cardState === "pinned") closeCard(); else setCardState("pinned"); }} onPointerEnter={beginHoverPreview} onPointerLeave={() => { if (previewTimerRef.current) { clearTimeout(previewTimerRef.current); previewTimerRef.current = null; } schedulePreviewDismissal(); }} ref={emailTriggerRef} type="button"><SocialCtaArtwork network="Email" /></button>
       {popover}
     </div>

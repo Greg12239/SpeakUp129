@@ -9,6 +9,9 @@ export type FooterItem = {
   external?: boolean;
 };
 
+export const joinFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSciJw_Jio_KMje5xPZA6yi3SQrm07IZZzhyaS4L0sU8BrDlSg/viewform";
+
 export type Partner = {
   id: string;
   name: string;
@@ -34,6 +37,7 @@ export const siteConfig = {
     instagram: "https://www.instagram.com/speakup_auebgenz/" as string | null,
     linkedIn:
       "https://www.linkedin.com/company/speakup-aueb-genz/home/" as string | null,
+    tikTok: "https://www.tiktok.com/@speakupaueb_genz" as string | null,
     email: "mailto:speakupaueb@gmail.com" as string | null,
     privacy: null as string | null,
   },
