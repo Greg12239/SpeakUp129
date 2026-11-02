@@ -26,11 +26,78 @@ export function Hero({ transitionProgress }: HeroProps) {
       return;
     }
 
+    let hasCompletedIntro = false;
+    let isHeroInView = true;
+    let observer: IntersectionObserver | undefined;
+    let syncReelPlayback = () => {};
+
     const context = gsap.context(() => {
+      const drums = gsap.utils.toArray<HTMLElement>(".hero-reel-drum", hero);
+      const reels = drums.map((drum, lineIndex) => {
+        const reel = gsap.timeline({ paused: true, repeat: -1 });
+        const lineDelay = lineIndex;
+
+        gsap.set(drum, {
+          rotationX: 0,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+
+        reel
+          .to(
+            drum,
+            {
+              rotationX: -180,
+              duration: 0.9,
+              ease: "power3.inOut",
+              force3D: true,
+            },
+            1.5 + lineDelay,
+          )
+          .to(
+            drum,
+            {
+              rotationX: -360,
+              duration: 0.9,
+              ease: "power3.inOut",
+              force3D: true,
+            },
+            5.5 + lineDelay,
+          )
+          // -360deg and 0deg render identically. Resetting only while the
+          // front face is fully settled prevents cumulative transform drift.
+          .set(drum, { rotationX: 0 }, 7.98)
+          .to({}, { duration: 0.02 }, 7.98);
+
+        return reel;
+      });
+
+      syncReelPlayback = () => {
+        const shouldPlay = hasCompletedIntro && isHeroInView && !document.hidden;
+        hero.dataset.reelActive = String(shouldPlay);
+
+        reels.forEach((reel) => {
+          if (shouldPlay) reel.play();
+          else reel.pause();
+        });
+      };
+
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isHeroInView = Boolean(entry && entry.intersectionRatio >= 0.35);
+          syncReelPlayback();
+        },
+        { threshold: [0, 0.35, 1] },
+      );
+      observer.observe(hero);
+      document.addEventListener("visibilitychange", syncReelPlayback);
+
       const timeline = gsap.timeline({
         defaults: { ease: "power3.out" },
         onComplete: () => {
           hero.dataset.intro = "complete";
+          hasCompletedIntro = true;
+          syncReelPlayback();
           gsap.set(
             ".hero-title-line, .hero-support, .scroll-cue",
             { clearProps: "opacity,transform" },
@@ -58,7 +125,11 @@ export function Hero({ transitionProgress }: HeroProps) {
         .to(".bp-primary", { opacity: 0.16, duration: 0.44 }, 2.02);
     }, hero);
 
-    return () => context.revert();
+    return () => {
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", syncReelPlayback);
+      context.revert();
+    };
   }, []);
 
   return (
@@ -78,9 +149,34 @@ export function Hero({ transitionProgress }: HeroProps) {
       <span className="hero-image-overlay" aria-hidden="true" />
       <Container className="hero-inner">
         <div className="hero-copy">
-          <h1 className="hero-title" id="hero-title">
-            <span className="hero-title-line">Learn to sell.</span>
-            <span className="hero-title-line">Learn to lead.</span>
+          <h1 className="hero-title hero-title--reel" id="hero-title">
+            <span className="sr-only">
+              Learn to sell. Speak with impact. Learn to lead. Lead with purpose.
+            </span>
+            <span className="hero-title-line" aria-hidden="true">
+              <span className="hero-reel-window">
+                <span className="hero-reel-drum">
+                  <span className="hero-reel-face hero-reel-face--front">
+                    Learn to sell.
+                  </span>
+                  <span className="hero-reel-face hero-reel-face--back">
+                    Speak with impact.
+                  </span>
+                </span>
+              </span>
+            </span>
+            <span className="hero-title-line" aria-hidden="true">
+              <span className="hero-reel-window">
+                <span className="hero-reel-drum">
+                  <span className="hero-reel-face hero-reel-face--front">
+                    Learn to lead.
+                  </span>
+                  <span className="hero-reel-face hero-reel-face--back">
+                    Lead with purpose.
+                  </span>
+                </span>
+              </span>
+            </span>
           </h1>
           <div className="hero-support">
             <p>

@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { m } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { partners as defaultPartners, type Partner } from "@/content/site";
+import { PartnerConstellation } from "@/components/sections/PartnerConstellation";
 
 type PartnersProps = {
-  partners?: Partner[];
+  partners?: readonly Partner[];
 };
 
 const headingRailReveal = {
@@ -57,32 +57,7 @@ export function Partners({ partners = defaultPartners }: PartnersProps) {
       </m.div>
 
       <Container>
-        {partners.length > 0 ? (
-          <div className="partner-list" role="list">
-            {partners.map((partner) => {
-              const logo = (
-                <Image
-                  src={partner.logoSrc}
-                  alt={partner.alt}
-                  width={200}
-                  height={80}
-                  sizes="(max-width: 768px) 40vw, 20vw"
-                  loading="lazy"
-                />
-              );
-
-              return partner.href ? (
-                <a href={partner.href} key={partner.name} role="listitem">
-                  {logo}
-                </a>
-              ) : (
-                <div key={partner.name} role="listitem">
-                  {logo}
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
+        {partners.length > 0 ? <PartnerConstellation partners={partners} /> : null}
       </Container>
     </section>
   );

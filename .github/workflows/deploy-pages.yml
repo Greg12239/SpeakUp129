@@ -42,8 +42,8 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_BASE_PATH: /Speakup1
-          NEXT_PUBLIC_SITE_URL: https://greg12239.github.io/Speakup1
+          NEXT_PUBLIC_BASE_PATH: /SpeakUp129
+          NEXT_PUBLIC_SITE_URL: https://greg12239.github.io/SpeakUp129
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 
 const isGitHubPagesBuild = process.env.GITHUB_PAGES === "true";
-const githubPagesBasePath = "/Speakup1";
+const githubPagesBasePath = "/SpeakUp129";
 
 const nextConfig: NextConfig = {
   output: "export",
   // Keep local development at `/`. The Pages workflow enables this only for
-  // the project-site build so generated assets resolve beneath `/Speakup1`.
+  // the project-site build so generated assets resolve beneath `/SpeakUp129`.
   basePath: isGitHubPagesBuild ? githubPagesBasePath : undefined,
   assetPrefix: isGitHubPagesBuild ? githubPagesBasePath : undefined,
   images: {

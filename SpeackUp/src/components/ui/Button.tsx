@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  m,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import type {
-  MouseEventHandler,
-  PointerEventHandler,
-  ReactNode,
-} from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 type ButtonVariant = "ink" | "paper" | "nav";
 
@@ -33,14 +22,7 @@ function ArrowIcon({ className }: { className?: string }) {
   );
 }
 
-function hasFinePointer() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(hover: hover) and (pointer: fine)").matches
-  );
-}
-
-/** Shared editorial CTA with CSS-owned visual choreography. */
+/** Shared precision-editorial CTA with stationary outer geometry. */
 export function Button({
   children,
   href,
@@ -50,77 +32,33 @@ export function Button({
   onClick,
   title,
 }: ButtonProps) {
-  const reducedMotion = useReducedMotion();
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const x = useSpring(pointerX, { stiffness: 520, damping: 34, mass: 0.28 });
-  const y = useSpring(pointerY, { stiffness: 520, damping: 34, mass: 0.28 });
-  const actionX = useTransform(x, (value) => value * 1.35);
-  const actionY = useTransform(y, (value) => value * 1.35);
-  const magneticEnabled = !disabled && !reducedMotion;
-
-  const resetMagnet = () => {
-    pointerX.set(0);
-    pointerY.set(0);
-  };
-
-  const handlePointerEnter: PointerEventHandler<HTMLElement> = (event) => {
-    if (!magneticEnabled || !hasFinePointer()) return;
-
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.dataset.fillOrigin =
-      event.clientX - bounds.left < bounds.width / 2 ? "left" : "right";
-  };
-
-  const handlePointerMove: PointerEventHandler<HTMLElement> = (event) => {
-    if (!magneticEnabled || !hasFinePointer()) return;
-
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const xOffset = event.clientX - (bounds.left + bounds.width / 2);
-    const yOffset = event.clientY - (bounds.top + bounds.height / 2);
-
-    pointerX.set(Math.max(-4, Math.min(4, xOffset * 0.08)));
-    pointerY.set(Math.max(-3, Math.min(3, yOffset * 0.1)));
-  };
-
   const classes = `button button-${variant} ${className}`.trim();
-  const motionStyle = magneticEnabled ? { x, y } : undefined;
-  const sharedProps = {
-    className: classes,
-    "data-fill-origin": "left",
-    "data-reduced-motion": Boolean(reducedMotion),
-    title,
-    onPointerEnter: handlePointerEnter,
-    onPointerMove: handlePointerMove,
-    onPointerLeave: resetMagnet,
-    style: motionStyle,
-    whileTap: disabled ? undefined : { scale: 0.985 },
-  };
   const content = (
     <>
-      <span className="button-surface" aria-hidden="true" />
-      <span className="button-registration" aria-hidden="true" />
       <span className="button-label">{children}</span>
-      <m.span className="button-action" aria-hidden="true" style={{ x: actionX, y: actionY }}>
-        <span className="button-arrow-viewport">
-          <ArrowIcon className="button-arrow button-arrow--outgoing" />
-          <ArrowIcon className="button-arrow button-arrow--incoming" />
-        </span>
-      </m.span>
+      <span className="button-action" aria-hidden="true">
+        <ArrowIcon className="button-arrow" />
+      </span>
     </>
   );
 
   if (href && !disabled) {
     return (
-      <m.a href={href} {...sharedProps}>
+      <a className={classes} href={href} title={title}>
         {content}
-      </m.a>
+      </a>
     );
   }
 
   return (
-    <m.button type="button" disabled={disabled} onClick={onClick} {...sharedProps}>
+    <button
+      className={classes}
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      title={title}
+    >
       {content}
-    </m.button>
+    </button>
   );
 }

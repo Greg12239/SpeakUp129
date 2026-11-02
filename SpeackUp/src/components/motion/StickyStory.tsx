@@ -14,8 +14,8 @@ import { getStageKeyframes } from "@/lib/motion";
 export type StoryStage = {
   input: number[];
   opacity: number[];
-  y: number[];
-  scale: number[];
+  y: Array<number | string>;
+  scale?: number[];
 };
 
 type IntroLineStage = {
@@ -56,13 +56,17 @@ function StoryFrame({
   const keyframes = stage ?? getStageKeyframes(index, count);
   const opacity = useTransform(progress, keyframes.input, keyframes.opacity);
   const y = useTransform(progress, keyframes.input, keyframes.y);
-  const scale = useTransform(progress, keyframes.input, keyframes.scale);
+  const scale = useTransform(
+    progress,
+    keyframes.input,
+    keyframes.scale ?? keyframes.input.map(() => 1),
+  );
 
   return (
     <m.p
       aria-hidden="true"
       className={`sticky-statement ${className}`.trim()}
-      style={{ opacity, y, scale }}
+      style={keyframes.scale ? { opacity, y, scale } : { opacity, y }}
     >
       {statement}
     </m.p>
@@ -80,7 +84,7 @@ function IntroLine({
 }) {
   const input = [stage?.start ?? 0, stage?.end ?? 0];
   const opacity = useTransform(progress, input, [0, 1]);
-  const y = useTransform(progress, input, [112, 0]);
+  const y = useTransform(progress, input, ["100%", "0%"]);
 
   return (
     <span className="conversation-intro-line-mask">
@@ -108,14 +112,12 @@ function IntroStoryFrame({
 }) {
   const keyframes = stage ?? getStageKeyframes(0, count);
   const opacity = useTransform(progress, keyframes.input, keyframes.opacity);
-  const y = useTransform(progress, keyframes.input, keyframes.y);
-  const scale = useTransform(progress, keyframes.input, keyframes.scale);
 
   return (
     <m.p
       aria-hidden="true"
-      className={`sticky-statement ${className}`.trim()}
-      style={{ opacity, y, scale }}
+      className={`sticky-statement ${className} conversation-intro-statement`.trim()}
+      style={{ opacity }}
     >
       {lines.map((line, index) => (
         <IntroLine

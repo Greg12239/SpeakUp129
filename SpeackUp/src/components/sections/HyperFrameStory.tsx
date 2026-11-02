@@ -88,6 +88,7 @@ function useStoryStageController(
     [],
   );
   const started = useRef(Array.from({ length: chapterTiming.length }, () => false));
+  const completed = useRef(false);
   const queue = useRef(Promise.resolve());
 
   useEffect(() => {
@@ -139,9 +140,6 @@ function useStoryStageController(
         play(stage.copyY, 0, timing.copy),
       ]);
 
-      if (!cancelled && index === chapterTiming.length - 1) {
-        onComplete();
-      }
     };
     const startEligibleStages = (latest: number) => {
       chapterTiming.forEach((timing, index) => {
@@ -150,7 +148,19 @@ function useStoryStageController(
         }
 
         started.current[index] = true;
-        queue.current = queue.current.then(() => runStage(index));
+        const queuedStage = queue.current.then(() => runStage(index));
+        queue.current = queuedStage;
+
+        if (index === chapterTiming.length - 1) {
+          void queuedStage.then(() => {
+            const allStagesStarted = started.current.every(Boolean);
+
+            if (!cancelled && !completed.current && allStagesStarted) {
+              completed.current = true;
+              onComplete();
+            }
+          });
+        }
       });
     };
 
@@ -287,7 +297,6 @@ export function HyperFrameStory({
   const reducedMotion = useReducedMotion();
   const largeLayout = useLargeEditorialLayout();
   const [completed, setCompleted] = useState(false);
-  const [unpinned, setUnpinned] = useState(false);
   const { scrollYProgress: rawProgress } = useScroll({
     target: sectionRef,
     offset: largeLayout ? ["start start", "end end"] : ["start start", "end 0.3"],
@@ -348,26 +357,6 @@ export function HyperFrameStory({
     return () => window.removeEventListener("resize", placeIntroAtCanvasCenter);
   }, [desktopEnhanced, stages]);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-
-    if (!completed || unpinned || !desktopEnhanced || !section) {
-      return;
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-
-      if (entry && !entry.isIntersecting && entry.boundingClientRect.bottom <= 0) {
-        setUnpinned(true);
-        observer.disconnect();
-      }
-    });
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, [completed, desktopEnhanced, unpinned]);
-
   return (
     <section
       ref={sectionRef}
@@ -378,7 +367,6 @@ export function HyperFrameStory({
       data-enhanced={desktopEnhanced}
       data-cascade-enhanced={cascadeEnhanced}
       data-complete={completed}
-      data-unpinned={unpinned}
     >
       <h2 className="sr-only" id="speakup-story-heading">
         SpeakUp: who we are, workshops, speaker events, and networking events

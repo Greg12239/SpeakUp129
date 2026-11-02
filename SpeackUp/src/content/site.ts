@@ -10,10 +10,12 @@ export type FooterItem = {
 };
 
 export type Partner = {
+  id: string;
   name: string;
   logoSrc: string;
-  href?: string;
   alt: string;
+  logoFormat: "wide" | "tall" | "standard";
+  logoTone?: "light-on-dark";
 };
 
 export const siteConfig = {
@@ -99,7 +101,100 @@ export const careerStatements = [
   "Your skills get you hired.",
 ] as const;
 
-export const partners: Partner[] = [];
+export const partners = [
+  {
+    id: "hell",
+    name: "HELL",
+    logoSrc: "/partners/hell.png",
+    alt: "HELL logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "korpi",
+    name: "Korpi",
+    logoSrc: "/partners/korpi.png",
+    alt: "Korpi logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "everest",
+    name: "Everest",
+    logoSrc: "/partners/everest.png",
+    alt: "Everest logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "plaisio",
+    name: "Πλαίσιο (Plaisio)",
+    logoSrc: "/partners/plaisio.png",
+    alt: "Πλαίσιο (Plaisio) logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "nescafe",
+    name: "Nescafé",
+    logoSrc: "/partners/nescafe.png",
+    alt: "Nescafé logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "gregorys",
+    name: "Γρηγόρης (Gregory's)",
+    logoSrc: "/partners/gregorys.png",
+    alt: "Γρηγόρης (Gregory's) logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "maragos",
+    name: "Maragos",
+    logoSrc: "/partners/maragos.png",
+    alt: "Maragos logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "yum-tales-supply",
+    name: "Yum Tales Supply",
+    logoSrc: "/partners/yum-tales-supply.png",
+    alt: "Yum Tales Supply logo",
+    logoFormat: "tall",
+  },
+  {
+    id: "nestle",
+    name: "Nestlé",
+    logoSrc: "/partners/nestle.png",
+    alt: "Nestlé logo",
+    logoFormat: "tall",
+  },
+  {
+    id: "multiplo",
+    name: "Multiplo",
+    logoSrc: "/partners/multiplo.png",
+    alt: "Multiplo logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "zografos",
+    name: "Zografos",
+    logoSrc: "/partners/zografos.png",
+    alt: "Zografos logo",
+    logoFormat: "wide",
+  },
+  {
+    id: "mastermind",
+    name: "Mastermind",
+    logoSrc: "/partners/mastermind.png",
+    alt: "Mastermind logo",
+    logoFormat: "standard",
+    logoTone: "light-on-dark",
+  },
+  {
+    id: "elements-of-sound",
+    name: "Elements of Sound",
+    logoSrc: "/partners/elements-of-sound.png",
+    alt: "Elements of Sound logo",
+    logoFormat: "wide",
+  },
+] as const satisfies readonly Partner[];
 
 export const footerItems: FooterItem[] = [
   { label: "Events", href: "#events" },
