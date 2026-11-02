@@ -12,6 +12,8 @@ type ButtonProps = {
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   title?: string;
+  target?: string;
+  rel?: string;
 };
 
 function ArrowIcon({ className }: { className?: string }) {
@@ -31,6 +33,8 @@ export function Button({
   disabled = false,
   onClick,
   title,
+  target,
+  rel,
 }: ButtonProps) {
   const classes = `button button-${variant} ${className}`.trim();
   const content = (
@@ -44,7 +48,7 @@ export function Button({
 
   if (href && !disabled) {
     return (
-      <a className={classes} href={href} title={title}>
+      <a className={classes} href={href} title={title} target={target} rel={rel}>
         {content}
       </a>
     );

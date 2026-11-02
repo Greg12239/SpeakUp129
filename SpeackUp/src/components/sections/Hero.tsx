@@ -184,7 +184,12 @@ export function Hero({ transitionProgress }: HeroProps) {
               <br />
               communication and leadership.
             </p>
-            <Button href="#join" variant="paper">
+            <Button
+              href="https://docs.google.com/forms/d/e/1FAIpQLSciJw_Jio_KMje5xPZA6yi3SQrm07IZZzhyaS4L0sU8BrDlSg/viewform"
+              rel="noopener noreferrer"
+              target="_blank"
+              variant="paper"
+            >
               Join Us
             </Button>
           </div>
