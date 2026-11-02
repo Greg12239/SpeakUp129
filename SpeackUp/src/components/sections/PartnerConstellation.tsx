@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Partner } from "@/content/site";
 import { useHydrated } from "@/hooks/useHydrated";
+import { publicAsset } from "@/lib/public-asset";
 
 type PartnerConstellationProps = {
   partners: readonly Partner[];
@@ -110,7 +111,7 @@ function PartnerOrb({ partner, index }: { partner: Partner; index: number }) {
               />
               <span className="partner-orb-logo">
                 <Image
-                  src={partner.logoSrc}
+                  src={publicAsset(partner.logoSrc as `/${string}`)}
                   alt={partner.alt}
                   fill
                   sizes="(max-width: 640px) 34vw, (max-width: 1024px) 19vw, 12vw"
